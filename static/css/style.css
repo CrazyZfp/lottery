@@ -1,0 +1,139 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+.info-panel {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.info-panel div {
+    margin: 10px 0;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.buy {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.sell {
+    background-color: #f44336;
+    color: white;
+}
+
+.close {
+    background-color: #2196F3;
+    color: white;
+}
+
+.config-link {
+    text-align: center;
+}
+
+.config-link a {
+    margin: 0 10px;
+    color: #666;
+    text-decoration: none;
+}
+
+.config-link a:hover {
+    color: #333;
+}
+
+/* 状态消息样式 */
+.status-message {
+    margin: 10px 0;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.status-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* 按钮禁用状态 */
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 价格变动样式 */
+.price-change {
+    margin-left: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.price-change.up {
+    color: #4CAF50;
+}
+
+.price-change.down {
+    color: #f44336;
+}
+
+/* 策略选择样式 */
+.strategy {
+    display: flex;
+    align-items: center;
+}
+
+#strategy-select {
+    margin-left: 10px;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+/* 自动交易按钮 */
+.auto {
+    background-color: #9C27B0;
+    color: white;
+}
+
+.auto.active {
+    background-color: #673AB7;
+}
