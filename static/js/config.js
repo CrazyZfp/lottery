@@ -44,7 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
        .then(response => response.json())
        .then(data => {
             if (data.status === 'success') {
-                alert('配置保存成功');
+                alert('配置保存成功，请返回主页查看更新后的配置');
+                // 添加一个返回主页的链接
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'success-message';
+                messageDiv.innerHTML = '配置已更新，<a href="/">点击返回主页</a>查看最新配置';
+                form.appendChild(messageDiv);
             } else {
                 alert(`配置保存失败: ${data.message || '未知错误'}`);
             }

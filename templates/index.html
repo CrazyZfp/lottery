@@ -33,17 +33,18 @@
                 <span id="current-strategy">MA</span>
                 <select id="strategy-select">
                     <option value="simple">简单策略</option>
-                    <option value="ma" selected>MA策略</option>
+                    <option value="ma">MA策略</option>
                     <option value="rsi">RSI策略</option>
                     <option value="combined">组合策略</option>
+                    <option value="" selected>无</option>
                 </select>
             </div>
             <div id="status-message" class="status-message" style="display: none;"></div>
         </div>
         
         <div class="action-buttons">
-            <button id="buy-btn" class="btn buy">开多</button>
-            <button id="sell-btn" class="btn sell">开空</button>
+            <button id="long-btn" class="btn long">开多</button>
+            <button id="short-btn" class="btn short">开空</button>
             <button id="close-btn" class="btn close">平仓</button>
             <button id="auto-btn" class="btn auto">自动交易</button>
         </div>

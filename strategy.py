@@ -1,4 +1,3 @@
-import time
 import configparser
 import numpy as np
 from datetime import datetime
@@ -204,7 +203,7 @@ class RSIStrategy(Strategy):
 
 
 # 策略工厂，用于创建不同的策略实例
-def create_strategy(strategy_name="ma"):
+def create_strategy(strategy_name=""):
     if strategy_name.lower() == "simple":
         return SimpleStrategy()
     elif strategy_name.lower() == "ma":

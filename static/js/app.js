@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const buyBtn = document.getElementById('buy-btn');
-    const sellBtn = document.getElementById('sell-btn');
+    const longBtn = document.getElementById('long-btn');
+    const shortBtn = document.getElementById('short-btn');
     const closeBtn = document.getElementById('close-btn');
     const autoBtn = document.getElementById('auto-btn');
     const strategySelect = document.getElementById('strategy-select');
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // 显示价格变动
                     if (tradeStatus.lastPrice !== null) {
                         const priceChange = tradeStatus.currentPrice - tradeStatus.lastPrice;
-                        const changePercent = (priceChange / tradeStatus.lastPrice * 100).toFixed(2);
+                        const changePercent = (priceChange / tradeStatus.lastPrice * 100).toFixed(3);
                         
                         if (priceChange > 0) {
                             priceChangeSpan.textContent = `+${changePercent}%`;
@@ -88,8 +88,8 @@ document.addEventListener('DOMContentLoaded', function() {
             statusDiv.className = 'status-message error';
             
             // 禁用所有按钮
-            buyBtn.disabled = true;
-            sellBtn.disabled = true;
+            longBtn.disabled = true;
+            shortBtn.disabled = true;
             closeBtn.disabled = true;
         } else {
             statusDiv.style.display = 'none';
@@ -97,28 +97,28 @@ document.addEventListener('DOMContentLoaded', function() {
             // 根据持仓状态启用/禁用按钮
             if (tradeStatus.position) {
                 // 有持仓时，禁用开仓按钮，启用平仓按钮
-                buyBtn.disabled = true;
-                sellBtn.disabled = true;
+                longBtn.disabled = true;
+                shortBtn.disabled = true;
                 closeBtn.disabled = false;
             } else {
                 // 无持仓时，启用开仓按钮，禁用平仓按钮
-                buyBtn.disabled = false;
-                sellBtn.disabled = false;
+                longBtn.disabled = false;
+                shortBtn.disabled = false;
                 closeBtn.disabled = true;
             }
         }
     }
     
     // 快捷下单
-    function quickOrder(side) {
+    function quickOrder(opr) {
         // 显示加载状态
         statusDiv.textContent = '处理中...';
         statusDiv.style.display = 'block';
         statusDiv.className = 'status-message';
         
         // 禁用按钮防止重复点击
-        buyBtn.disabled = true;
-        sellBtn.disabled = true;
+        longBtn.disabled = true;
+        shortBtn.disabled = true;
         closeBtn.disabled = true;
         
         fetch('/api/quick_order', {
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ side: side })
+            body: JSON.stringify({ opr: opr })
         })
         .then(response => response.json())
         .then(data => {
@@ -196,6 +196,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.status === 'success') {
                 document.getElementById('current-strategy').textContent = strategySelect.options[strategySelect.selectedIndex].text;
                 showStatus(`策略已更新为: ${strategySelect.options[strategySelect.selectedIndex].text}`, 'success');
+                
+                // 重新加载配置，确保配置已更新
+                loadConfig();
+                // 重新获取价格数据，确保订阅了正确的交易标的
+                updatePrice();
             } else {
                 showStatus(data.message || '更新策略失败', 'error');
             }
@@ -234,11 +239,39 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // 按钮事件绑定
-    buyBtn.addEventListener('click', () => quickOrder('BUY'));
-    sellBtn.addEventListener('click', () => quickOrder('SELL'));
+    longBtn.addEventListener('click', () => quickOrder('LONG'));
+    shortBtn.addEventListener('click', () => quickOrder('SHORT'));
     closeBtn.addEventListener('click', () => quickOrder('CLOSE'));
     autoBtn.addEventListener('click', toggleAutoTrading);
     strategySelect.addEventListener('change', updateStrategy);
+    
+    // 加载配置信息
+    function loadConfig() {
+        fetch('/api/get_config')
+            .then(response => response.json())
+            .then(data => {
+                // 更新交易标的显示
+                document.getElementById('symbol').textContent = data.symbol || 'BTCUSDT';
+                
+                // 更新策略显示
+                const strategyValue = data.strategy || '';
+                document.getElementById('current-strategy').textContent = getStrategyText(strategyValue);
+                strategySelect.value = strategyValue;
+            })
+            .catch(error => {
+                console.error('加载配置失败:', error);
+            });
+    }
+    
+    // 获取策略文本
+    function getStrategyText(strategyValue) {
+        for(let i = 0; i < strategySelect.options.length; i++) {
+            if(strategySelect.options[i].value === strategyValue) {
+                return strategySelect.options[i].text;
+            }
+        }
+        return '无';
+    }
     
     // 初始化 - 恢复状态
     fetch('/api/restore')
@@ -253,6 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             updateButtonStatus();
             updatePrice();
+            loadConfig(); // 加载配置信息
         })
         .catch(error => {
             console.error('恢复状态失败:', error);
