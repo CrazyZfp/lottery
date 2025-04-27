@@ -26,7 +26,7 @@ pip install -r requirements.txt
 
 ## 运行方式
 ```bash
-python main.py
+uv run main.py
 ```
 
 ## 主要功能
